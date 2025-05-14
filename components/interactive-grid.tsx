@@ -76,7 +76,14 @@ export default function InteractiveGrid() {
         const maxDistance = Math.sqrt(dimensions.width * dimensions.width + dimensions.height * dimensions.height) / 2
 
         // Calculate rotation based on mouse position
-        const angle = Math.atan2(dy, dx) * (180 / Math.PI)
+        let angle = Math.atan2(dy, dx) * (180 / Math.PI)
+        
+        // Get current rotation
+        const currentRotation = gsap.getProperty(line, "rotation") as number || 0
+        
+        // Adjust angle to prevent sudden flips
+        while (angle - currentRotation > 180) angle -= 360
+        while (angle - currentRotation < -180) angle += 360
 
         // Animate rotation with GSAP
         gsap.to(line, {
